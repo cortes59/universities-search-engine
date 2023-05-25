@@ -1,56 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { useEffect, useState } from "react";
+import "antd/dist/reset.css";
+import "./App.css";
+import UniversitiesTable from "./components/UniversitiesTable/UniversitiesTable";
+import { IPaginationParams } from "./app/models/interfaces";
+import { Select } from "antd";
+import { COUNTRIES } from "./constants/countries";
 
 function App() {
+  const [country, setCountry] = useState("United States");
+  const [pagination, setPagination] = useState<IPaginationParams>({
+    current: 1,
+    perPage: 10,
+  });
+
+  const onPaginationChange = (current: number, perPage: number) => {
+    setPagination({ current, perPage });
+  };
+
+  useEffect(() => {}, [country, setPagination]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <div className="universities-table-container">
+        <div className="universities-filter">
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a country"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
+            options={COUNTRIES}
+            value={country}
+            onChange={setCountry}
+          />
+          {/* <Button type="primary" icon={<SearchOutlined />}>
+            Search
+          </Button> */}
+        </div>
+        <UniversitiesTable
+          className="universities-table"
+          data={[]}
+          loading={false}
+          pagination={pagination}
+          onPaginationChange={onPaginationChange}
+        />
+      </div>
     </div>
   );
 }
