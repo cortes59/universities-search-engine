@@ -3,7 +3,7 @@ import "antd/dist/reset.css";
 import "./App.css";
 import UniversitiesTable from "./components/UniversitiesTable/UniversitiesTable";
 import { IPaginationParams } from "./app/models/interfaces";
-import { Input, Select } from "antd";
+import { ConfigProvider, Input, Select, Typography } from "antd";
 import { COUNTRIES } from "./constants/countries";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { fetchUniversities } from "./features/university/universitySlice";
@@ -35,7 +35,7 @@ function App() {
         "_"
       )}_${item.web_pages.join("_")}`
         .toLowerCase()
-        .includes(debouncedSearch.toLowerCase() )
+        .includes(debouncedSearch.toLowerCase())
     );
   }, [universities, debouncedSearch]);
   useEffect(() => {
@@ -49,8 +49,12 @@ function App() {
   }, [country, dispatch]);
 
   return (
+    <ConfigProvider  theme={{token: { fontFamily: 'Poppins' }}}>
+
     <div className="App">
       <div className="universities-table-container">
+        <Typography.Title>University Search Engine</Typography.Title>
+
         <div className="universities-filter">
           <Input
             placeholder="Search"
@@ -88,6 +92,7 @@ function App() {
         />
       </div>
     </div>
+    </ConfigProvider>
   );
 }
 

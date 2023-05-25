@@ -11,6 +11,10 @@
   width: 80%;
 }
 
+.universities-table-container h1 {
+  text-align: center;
+}
+
 .universities-filter {
   display: flex;
   justify-content: flex-end;

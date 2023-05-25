@@ -6,7 +6,6 @@ const columns: ColumnsType<IUniversity> = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
   },
   {
     title: "Country",
