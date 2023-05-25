@@ -1,28 +1,63 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "antd/dist/reset.css";
 import "./App.css";
 import UniversitiesTable from "./components/UniversitiesTable/UniversitiesTable";
 import { IPaginationParams } from "./app/models/interfaces";
-import { Select } from "antd";
+import { Input, Select } from "antd";
 import { COUNTRIES } from "./constants/countries";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { fetchUniversities } from "./features/university/universitySlice";
+import { useDebounce } from "usehooks-ts";
 
 function App() {
   const [country, setCountry] = useState("United States");
+  const [searchValue, setSearchValue] = useState("");
   const [pagination, setPagination] = useState<IPaginationParams>({
     current: 1,
     perPage: 10,
   });
+  const debouncedSearch = useDebounce<string>(searchValue, 500);
+
+  const { universities, loading } = useAppSelector((state) => state.university);
+  const dispatch = useAppDispatch();
 
   const onPaginationChange = (current: number, perPage: number) => {
     setPagination({ current, perPage });
   };
 
-  useEffect(() => {}, [country, setPagination]);
+  const filteredSearchResults = useMemo(() => {
+    if (!universities.length || !debouncedSearch) {
+      return universities;
+    }
+
+    return universities.filter((item) =>
+      `${item.name}_${item["state-province"]}_${item.domains.join(
+        "_"
+      )}_${item.web_pages.join("_")}`
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase() )
+    );
+  }, [universities, debouncedSearch]);
+  useEffect(() => {
+    setPagination((pagination) => ({
+      ...pagination,
+      current: 1,
+    }));
+
+    console.log("FETCH");
+    dispatch(fetchUniversities(country));
+  }, [country, dispatch]);
 
   return (
     <div className="App">
       <div className="universities-table-container">
         <div className="universities-filter">
+          <Input
+            placeholder="Search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            style={{ width: 200 }}
+          />
           <Select
             showSearch
             style={{ width: 200 }}
@@ -46,8 +81,8 @@ function App() {
         </div>
         <UniversitiesTable
           className="universities-table"
-          data={[]}
-          loading={false}
+          data={filteredSearchResults}
+          loading={loading}
           pagination={pagination}
           onPaginationChange={onPaginationChange}
         />

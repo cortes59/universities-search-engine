@@ -1,13 +1,12 @@
 .App {
   display: flex;
-  height: 100vh;
-  overflow-y: auto;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
 
 .universities-table-container {
+  margin-top: 2rem;
   min-width: 400px;
   width: 80%;
 }
@@ -16,6 +15,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 .universities-filter > * {

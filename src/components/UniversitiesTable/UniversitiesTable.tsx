@@ -11,7 +11,6 @@ const columns: ColumnsType<IUniversity> = [
   {
     title: "Country",
     dataIndex: "country",
-    sorter: true,
   },
   {
     title: "Domains",
@@ -64,7 +63,6 @@ const columns: ColumnsType<IUniversity> = [
   {
     title: "Country",
     dataIndex: "country",
-    sorter: true,
     render: (country: string) => country,
   },
 ];
